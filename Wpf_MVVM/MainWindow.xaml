@@ -60,22 +60,22 @@
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" DataContext="{Binding SelectedItemDataGrid}">
-            <TextBox Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Text="{Binding Path=Id, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <ComboBox Text="{Binding Company, UpdateSourceTrigger=PropertyChanged}" IsEditable="False" IsReadOnly="true">
+            <ComboBox Text="{Binding Path=Company, UpdateSourceTrigger=PropertyChanged}" IsEditable="False" IsReadOnly="true">
                 <ComboBoxItem Content="Microsoft"/>
                 <ComboBoxItem Content="Google"/>
             </ComboBox>
 
-            <ComboBox Text="{Binding Deptstr, UpdateSourceTrigger=PropertyChanged}" IsEditable="False" IsReadOnly="true">
+            <ComboBox Text="{Binding Path=Deptstr, UpdateSourceTrigger=PropertyChanged}" IsEditable="False" IsReadOnly="true">
                 <TextBlock>Programmer</TextBlock>
                 <TextBlock>Designer</TextBlock>
                 <TextBlock>Programmer<LineBreak/>Designer</TextBlock>
             </ComboBox>
 
-            <TextBox Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Text="{Binding Path=Login, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Text="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
 
         <DockPanel Grid.Row="0">
@@ -84,7 +84,6 @@
                     <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
                     <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
                     <DataGridTextColumn Header="Company" Binding="{Binding Path=Company}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
-
                     <DataGridTemplateColumn Header="Departament" IsReadOnly="True" CanUserReorder="False" CanUserSort="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -94,11 +93,11 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-
                     <DataGridTextColumn Header="Login" Binding="{Binding Path=Login}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
                     <DataGridTextColumn Header="Password" Binding="{Binding Path=Password}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
+        
     </Grid>
 </Window>

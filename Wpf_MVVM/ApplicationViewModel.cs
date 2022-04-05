@@ -6,23 +6,25 @@ using System.Net;
 using System.IO;
 using System.Windows;
 using System.Linq;
+using System.Net.Http;
+using System;
+using System.Threading.Tasks;
 
 namespace Wpf_MVVM
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
+        static readonly HttpClient client = new();
+        static readonly string uri = "https://localhost:44339/MyProject/";
+
         public event PropertyChangedEventHandler? PropertyChanged;
-        public ObservableCollection<DataPage> DataPages { get; set; }
         private readonly JsonSerializerOptions options = new() { WriteIndented = true };
 
+        public ObservableCollection<DataPage> DataPages { get; set; }
         private DataPage selectedDataPage, dataPage;
 
-        private RelayCommand addCommand;
-        private RelayCommand showCommand;
-        private RelayCommand removeCommand;
-        private RelayCommand modifyCommand;
-
         //Добавление записи в БД ✔
+        private RelayCommand addCommand;
         public RelayCommand AddCommand
         {
             get
@@ -34,37 +36,35 @@ namespace Wpf_MVVM
                         dataPage = obj as DataPage;
                         string str = JsonSerializer.Serialize(dataPage, options);
 
-                        MyDebug(str);
-
-                        //SendData("/Create?str=" + str);
+                        SendData("Create?str=" + str);
                     }
                 });
             }
         }
 
         //Вывести данные в DataGrid ✔
+
+        private RelayCommand showCommand;
         public RelayCommand ShowCommand
         {
             get
             {
-                return showCommand ??= new RelayCommand(obj =>
+                return showCommand ??= new RelayCommand(async obj =>
                 {
                     try
                     {
-                        /*
-                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://localhost:44339/MyProject/Read");
-
-                        using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                        using StreamReader reader = new(response.GetResponseStream());
-
-                        DataPages.Clear();
-                        foreach (var item in JsonSerializer.Deserialize<DataList>(reader.ReadToEnd()).Data)
+                        string? json = await GetData("Read");
+                        if (json != null)
                         {
-                            DataPages.Add(item);
+                            DataPages.Clear();
+
+                            foreach (var item in JsonSerializer.Deserialize<DataList>(json).Data)
+                            {
+                                DataPages.Add(item);
+                            }
                         }
-                        */
                     }
-                    catch (WebException e)
+                    catch (HttpRequestException e)
                     {
                         MessageBox.Show(e.Message);
                     }
@@ -73,6 +73,7 @@ namespace Wpf_MVVM
         }
 
         //Применить изменения к строке ✔
+        private RelayCommand modifyCommand;
         public RelayCommand ModifyCommand
         {
             get
@@ -83,14 +84,15 @@ namespace Wpf_MVVM
                     {
                         dataPage = obj as DataPage;
                         string str = JsonSerializer.Serialize(dataPage, options);
-                        MyDebug(str);
-                        //SendData("/Update?str=" + str);
+ 
+                        SendData("Update?str=" + str);
                     }
                 });
             }
         }
 
         //Удаление элемента ✔
+        private RelayCommand removeCommand;
         public RelayCommand RemoveCommand
         {
             get
@@ -100,8 +102,8 @@ namespace Wpf_MVVM
                     if (obj is DataPage dataPage)
                     {
                         dataPage = obj as DataPage;
-                        MyDebug(dataPage);
-                        //SendData("/Delete?id=" + dataPage.Id.ToString());
+
+                        SendData("Delete?id=" + dataPage.Id.ToString());
                     }
                 },
                  (obj) => DataPages.Count > 0);
@@ -123,7 +125,7 @@ namespace Wpf_MVVM
                 OnPropertyChanged("SelectedDataPage");
             }
         }
-        //Полочение и присвоение данных textbox и combobox
+        //Получение и присвоение данных textbox и combobox
         public DataPage SelectedItemDataGrid
         {
             get { return dataPage; }
@@ -144,16 +146,28 @@ namespace Wpf_MVVM
         }
 
         //Технические методы
-        public static void SendData(string datareques )
+        static async Task<string> GetData(string datareques)
         {
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://localhost:44339/MyProject" + datareques);
-                using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                MessageBox.Show($"Status:{response.StatusCode}");
-                
+                return await client.GetStringAsync(uri + datareques);
+            }catch(HttpRequestException e)
+            {
+                MessageBox.Show(e.Message);
+                return null;
             }
-            catch (WebException e)
+        }
+        static void SendData(string datareques )
+        {
+            try
+            {
+                HttpRequestMessage request = new();
+                request.RequestUri = new Uri(uri + datareques);
+                HttpResponseMessage response = client.Send(request);
+
+                MessageBox.Show($"Status:{response.StatusCode}");
+            }
+            catch (HttpRequestException e)
             {
                 MessageBox.Show(e.Message);
             }
