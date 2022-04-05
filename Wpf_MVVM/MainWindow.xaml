@@ -84,7 +84,6 @@
                     <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
                     <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
                     <DataGridTextColumn Header="Company" Binding="{Binding Path=Company}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
-
                     <DataGridTemplateColumn Header="Departament" IsReadOnly="True" CanUserReorder="False" CanUserSort="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -94,11 +93,11 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-
                     <DataGridTextColumn Header="Login" Binding="{Binding Path=Login}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
                     <DataGridTextColumn Header="Password" Binding="{Binding Path=Password}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
+        
     </Grid>
 </Window>
