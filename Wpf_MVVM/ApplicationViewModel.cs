@@ -34,9 +34,9 @@ namespace Wpf_MVVM
                         dataPage = obj as DataPage;
                         string str = JsonSerializer.Serialize(dataPage, options);
 
-                        MyDebug(dataPage);
-                        
-                        //ConnectServer("/Create?str=" + str);
+                        MyDebug(str);
+
+                        //SendData("/Create?str=" + str);
                     }
                 });
             }
@@ -51,6 +51,7 @@ namespace Wpf_MVVM
                 {
                     try
                     {
+                        /*
                         HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://localhost:44339/MyProject/Read");
 
                         using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -61,6 +62,7 @@ namespace Wpf_MVVM
                         {
                             DataPages.Add(item);
                         }
+                        */
                     }
                     catch (WebException e)
                     {
@@ -81,7 +83,8 @@ namespace Wpf_MVVM
                     {
                         dataPage = obj as DataPage;
                         string str = JsonSerializer.Serialize(dataPage, options);
-                        ConnectServer("/Update?str=" + str);
+                        MyDebug(str);
+                        //SendData("/Update?str=" + str);
                     }
                 });
             }
@@ -97,15 +100,16 @@ namespace Wpf_MVVM
                     if (obj is DataPage dataPage)
                     {
                         dataPage = obj as DataPage;
-                        ConnectServer("/Delete?id=" + dataPage.Id.ToString());
+                        MyDebug(dataPage);
+                        //SendData("/Delete?id=" + dataPage.Id.ToString());
                     }
                 },
                  (obj) => DataPages.Count > 0);
             }
         }
 
-
         //Свойства интерфеса
+        //Получение данных из DG
         public DataPage SelectedDataPage
         {
             get { return selectedDataPage; }
@@ -119,6 +123,7 @@ namespace Wpf_MVVM
                 OnPropertyChanged("SelectedDataPage");
             }
         }
+        //Полочение и присвоение данных textbox и combobox
         public DataPage SelectedItemDataGrid
         {
             get { return dataPage; }
@@ -139,7 +144,7 @@ namespace Wpf_MVVM
         }
 
         //Технические методы
-        public static void ConnectServer(string datareques )
+        public static void SendData(string datareques )
         {
             try
             {
@@ -162,6 +167,7 @@ namespace Wpf_MVVM
                 $"Password:{page.Password}",
                 "Debug Message"
                 );
+        public static void MyDebug(string str) => MessageBox.Show(str);
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));

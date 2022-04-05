@@ -103,7 +103,6 @@ namespace Wpf_MVVM
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
-            //MessageBox.Show($"Class DataPage\n{prop}");
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
