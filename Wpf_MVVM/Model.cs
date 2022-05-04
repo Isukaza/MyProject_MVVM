@@ -10,7 +10,7 @@ namespace Wpf_MVVM
 {
     public class DataList
     {
-        private List<DataPage> data;
+        private List<DataPage> data = new();
         public List<DataPage> Data
         {
             get { return data; }
@@ -25,7 +25,7 @@ namespace Wpf_MVVM
         private List<string> deptL;
         private string login;
         private string password;
-        private string deptstr;
+        private string deptstr ="";
 
         public int Id
         {

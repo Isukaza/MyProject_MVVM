@@ -44,10 +44,10 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button Command="{Binding AddCommand}" CommandParameter="{Binding SelectedItemDataGrid}" Content="Добавить"/>
+            <Button Command="{Binding AddCommand}" CommandParameter="{Binding SelectedData}" Content="Добавить"/>
             <Button Command="{Binding ShowCommand}" Content="Вывести"/>
-            <Button Command="{Binding ModifyCommand}" CommandParameter="{Binding SelectedItemDataGrid}" Content="Изменить"/>
-            <Button Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedItemDataGrid}" Content="Удалить"/>
+            <Button Command="{Binding ModifyCommand}" CommandParameter="{Binding SelectedData}" Content="Изменить"/>
+            <Button Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedData}" Content="Удалить"/>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal">
@@ -59,27 +59,27 @@
             <TextBlock Text="Password"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" DataContext="{Binding SelectedItemDataGrid}">
-            <TextBox Text="{Binding Path=Id, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"/>
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <TextBox Text="{Binding TextBoxData.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Text="{Binding TextBoxData.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <ComboBox Text="{Binding Path=Company, UpdateSourceTrigger=PropertyChanged}" IsEditable="False" IsReadOnly="true">
+            <ComboBox Text="{Binding TextBoxData.Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="False" IsReadOnly="true">
                 <ComboBoxItem Content="Microsoft"/>
                 <ComboBoxItem Content="Google"/>
             </ComboBox>
 
-            <ComboBox Text="{Binding Path=Deptstr, UpdateSourceTrigger=PropertyChanged}" IsEditable="False" IsReadOnly="true">
+            <ComboBox Text="{Binding TextBoxData.Deptstr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="False" IsReadOnly="true">
                 <TextBlock>Programmer</TextBlock>
                 <TextBlock>Designer</TextBlock>
                 <TextBlock>Programmer<LineBreak/>Designer</TextBlock>
             </ComboBox>
 
-            <TextBox Text="{Binding Path=Login, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Text="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Text="{Binding TextBoxData.Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Text="{Binding TextBoxData.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
 
         <DockPanel Grid.Row="0">
-            <DataGrid ItemsSource="{Binding DataPages}" SelectedItem="{Binding SelectedDataPage}" CanUserAddRows="False" AutoGenerateColumns="False">
+            <DataGrid ItemsSource="{Binding DataPages}" SelectedItem="{Binding SelectedData}" CanUserAddRows="False" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
                     <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}" Width="100" IsReadOnly="True" CanUserReorder="False" CanUserSort="False"/>
