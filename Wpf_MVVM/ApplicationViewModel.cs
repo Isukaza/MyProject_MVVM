@@ -1,19 +1,13 @@
-﻿using System.Runtime.CompilerServices;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Net;
-using System.IO;
 using System.Windows;
 using System.Linq;
 using System.Net.Http;
 using System;
 using System.Threading.Tasks;
-using Calcium.ComponentModel;
 using Calcium.UIModel;
 using Calcium.UIModel.Input;
-using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace Wpf_MVVM
 {
