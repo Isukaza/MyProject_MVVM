@@ -1,22 +1,20 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Net;
-using System.Windows;
 using System.Linq;
 using System.Net.Http;
 using System;
 using System.Threading.Tasks;
 using Calcium.UIModel;
 using Calcium.UIModel.Input;
+using RestSharp;
 
 namespace Wpf_MVVM
 {
     public class ApplicationViewModel : ViewModelBase
     {
-        static readonly HttpClient client = new();
+        private static readonly RestClient restclient = new("https://localhost:44339/MyProject/");
         private readonly JsonSerializerOptions options = new() { WriteIndented = true };
-
-        static readonly string URL = "https://localhost:44339/MyProject/";
 
         private DataPage? selectedData;
         public DataPage? SelectedData
@@ -79,16 +77,21 @@ namespace Wpf_MVVM
         //Вывести данные в DataGrid ✔
         async void Show()
         {
+            var datarespone = await GetData("Read");
 
-            string? json = await GetData("Read");
-            if (json != null)
+            if (datarespone is null)
+            {
+                return;
+            }
+
+            if (DataPages is not null)
             {
                 DataPages.Clear();
+            }
 
-                foreach (var item in JsonSerializer.Deserialize<DataList>(json).Data)
-                {
-                    DataPages.Add(item);
-                }
+            foreach (var item in datarespone.Data)
+            {
+                DataPages.Add(item);
             }
         }
 
@@ -112,41 +115,40 @@ namespace Wpf_MVVM
         }
        
         //Получение данных с сервера
-        async Task<string> GetData(string datareques)
+        async Task<DataList?> GetData(string datareques)
         {
             try
             {
-                return await client.GetStringAsync(URL + datareques);
+                var request = new RestRequest("Read");
+                return await restclient.GetAsync<DataList>(request);
             }
             catch (HttpRequestException e)
             {
-                MessageBox.Show(e.Message);
+                System.Windows.MessageBox.Show(e.Message);
                 return null;
             }
         }
         //Отправка данных на сервер
-        void SendData(string datareques)
+        void SendData(string datarequest)
         {
             try
             {
-                HttpRequestMessage request = new();
-                request.RequestUri = new Uri(URL + datareques);
-                HttpResponseMessage response = client.Send(request);
+                var request = new RestRequest(datarequest, Method.Post);
+                var respone = restclient.PostAsync(request);
+                System.Windows.MessageBox.Show($"Status:{respone.Result.StatusCode}");
 
-                MessageBox.Show($"Status:{response.StatusCode}");
-
-                if (response.StatusCode == HttpStatusCode.OK)
+                if (respone.Result.StatusCode == HttpStatusCode.OK)
                 {
                     Show();
                 }
             }
-            catch (HttpRequestException e)
+            catch (AggregateException e)
             {
-                MessageBox.Show(e.Message);
+                System.Windows.MessageBox.Show(e.Message);
             }
         }
         //Технические методы
-        public static void MyDebug(DataPage page) => MessageBox.Show(
+        public static void MyDebug(DataPage page) => System.Windows.MessageBox.Show(
                 $"Id:{page.Id}\n" +
                 $"Name:{page.Name}\n" +
                 $"Company:{page.Company}\n" +
@@ -155,6 +157,6 @@ namespace Wpf_MVVM
                 $"Password:{page.Password}",
                 "Debug Message"
                 );
-        public static void MyDebug(string str) => MessageBox.Show(str);
+        public static void MyDebug(string str) => System.Windows.MessageBox.Show(str);
     }
 }
